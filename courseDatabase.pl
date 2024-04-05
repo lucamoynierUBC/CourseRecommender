@@ -48,3 +48,35 @@ parse_course(Course, X) :- course(Course, _, _, _, _), split_string(Course, "\s"
 % noncpsc(Course) :- not(course(atom_concat('CPSC ', _), _, _, _, _)).
 
 parse_department(Course, Dept) :- course((c, d), _, _, _, _), split_string(Course, "\s", "\s",  L). 
+
+% psyc checks whether a given course is a psychology course.
+% non_psyc checks whether a given course is NOT a psychology course.
+psyc(course(N,_,_,_,_)) :- split_string(N, "\s", "\s",  L), member("PSYC", L).
+non_psyc(course(N,_,_,_,_)) :- \+ psyc(course(N,_,_,_,_)).
+
+% phil checks whether a given course is a philosophy course.
+% non_phil checks whether a given course is NOT a philosophy course.
+phil(course(N,_,_,_,_)) :- split_string(N, "\s", "\s",  L), member("PHIL", L).
+non_phil(course(N,_,_,_,_)) :- \+ phil(course(N,_,_,_,_)).
+
+% ling checks whether a given course is a linguistics course.
+% non_ling checks whether a given course is NOT a linguistics course.
+ling(course(N,_,_,_,_)) :- split_string(N, "\s", "\s",  L), member("LING", L).
+non_ling(course(N,_,_,_,_)) :- \+ ling(course(N,_,_,_,_)).
+
+% cpsc checks whether a given course is a computer science course.
+% non_cpsc checks whether a given course is NOT a computer science course.
+cpsc(course(N,_,_,_,_)) :- split_string(N, "\s", "\s",  L), member("CPSC", L).
+non_cpsc(course(N,_,_,_,_)) :- \+ cpsc(course(N,_,_,_,_)).
+
+% four_cpsc checks whether a given course is a fourth-year computer science course.
+four_cpsc(course(N,_,_,_,_)) :-
+    cpsc(course(N,_,_,_,_)), 
+    split_string(N, "\s", "\s",  L), 
+    get_course_num(X,L), 
+    atom_chars(X, ['4'|_]).
+
+% get_course_num checks whether X is the last element of a list
+% used to obtain the course number from a parsed course code
+get_course_num(X,[X]).
+get_course_num(X, [_|Z]) :- get_course_num(X, Z).
