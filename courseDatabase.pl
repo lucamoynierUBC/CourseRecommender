@@ -21,13 +21,9 @@ course('PHIL 320', 'Logic: Metatheory and Computability', 3, ['PHIL 220'], 'Cont
 course('PHIL 321', 'Induction, Decision and Game Theory', 3, ['PHIL 220'], 'Formal methods relevant to probabilistic and inductive reasoning. Decision theory, game theory, axiomatic probability theory and its interpretations, belief dynamics, simulation and modelling.').
 
 % prereq(C, X) is true if C is a course and is a pre-requisite of another course
-prereq(Prereq, Course) :- course(Course, _, _, Prereqs, _), member(Prereq, Prereqs).
+prereq(Course, Prereq) :- course(Course, _, _, Prereqs, _), member(Prereq, Prereqs).
 
 % TODO:
-% Low importance: Add more courses
-% Create queries
-% Understand prolog !!!!
-% Parse courses content
 stream(cpsc).
 stream(ling). 
 stream(phil). 
@@ -38,16 +34,6 @@ dept('CPSC').
 dept('PSYC').
 dept('PHIL').
 dept('LING').
-
-car([X|_], X).
-
-parse_course(Course, X) :- course(Course, _, _, _, _), split_string(Course, "\s", "\s", L), car([X|_], X).
-
-% nonpsyc(Course) :- not(course(atom_concat('PSYC ', _), _, _, _, _)).
- 
-% noncpsc(Course) :- not(course(atom_concat('CPSC ', _), _, _, _, _)).
-
-parse_department(Course, Dept) :- course((c, d), _, _, _, _), split_string(Course, "\s", "\s",  L). 
 
 % psyc checks whether a given course is a psychology course.
 % non_psyc checks whether a given course is NOT a psychology course.
@@ -80,3 +66,12 @@ four_cpsc(course(N,_,_,_,_)) :-
 % used to obtain the course number from a parsed course code
 get_course_num(X,[X]).
 get_course_num(X, [_|Z]) :- get_course_num(X, Z).
+
+% What courses have you taken already
+% What are your interests?
+% What stream are you in?
+% Course is true if it is a requirement for the CPSC stream
+
+
+% Natural language interface:
+% NP
