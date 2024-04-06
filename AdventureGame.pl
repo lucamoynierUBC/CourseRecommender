@@ -5,13 +5,20 @@ room(bathroom, 'Bathroom', 'You enter the bathroom, nothing is amiss. You realiz
 room(hallway, 'Hallway', 'You enter the hallway... where do you go?').
 room(ikes, 'Ikes Cafe', 'You are in Ikes Cafe. The smell of cinnamon buns fills the air.').
 room(entrance, 'Entrance', 'You enter the IKB, its heavy metal doors are rusted, from the constant downpour and neglect').
+room(dodson, 'Dodson Room', 'You enter the Dodson Room. All the curtains are closed. Was someone hiding something?').
 
 
 % possible murder weapons
-weapon(butterknife, 'A butter knife, accessibly sharpened.').
-weapon(laptop, 'An old laptop with the resemblence of a brick, whith a large dent in it').
-weapon(bazooka, 'An old WW2 bazooka, used against the Nazis. Left behind by a history presentation in Dodson Room.'). 
-weapon(lanyard, 'A blue UBC landyard... 1st years...'). 
+weapon(butterknife, 'a butter knife, accessibly sharpened.').
+weapon(laptop, 'an old laptop with the resemblence of a brick, with a large dent in it').
+weapon(bazooka, 'an old WW2 bazooka, used against the Nazis. Left behind by a history presentation in Dodson Room.'). 
+weapon(lanyard, 'a blue UBC landyard... 1st years...'). 
+
+% inspecting the weapons
+inspect(butterknife, 'The knife has recently been cleaned. A few water droplets shine under the fluorescent lights.').
+inspect(laptop, 'The laptop is heavy. You try to turn it on but nothing happens.').
+inspect(bazooka, 'One of the largest weapons you have seen. It has no ammunition.').
+inspect(lanyard, 'You feel your first-year memories creeping up, but you brush away the thoughts. You realize that the lanyard is large enough to fit around someones neck.').
 
 move_rooms(Old, New) :- connected(Old, New).
 
@@ -27,6 +34,12 @@ connected(hallway, ikes).
 connected(entrance, hallway).
 connected(hallway, entrance).
 
+% room contains...
+contains(ikes, butterknife).
+contains(emerging_media_lab, laptop).
+contains(bazooka, dodson).
+contains(quiet_room, lanyard).
+
 suspects(president_bacon, 'President Bacon', 'Recently appointed UBC President.').
 suspects(ex_president_ono, 'Ex-President Ono', 'Former president of UBC.').
 suspects(trudeau, 'Justin Trudeau', 'Current prime minister of Canada, a UBC alum').
@@ -36,25 +49,25 @@ print_location :-
     room(Current, _, Desc),
     write(Desc),nl,nl,
     write('You can move to the following: '), nl, nl,
-    list_places(Current), nl,
-    write('Where would you like to move to?').
+    list_places(Current), nl, nl,
+    %write('Where would you like to move to?'), nl, nl.
     get_user_input.
 
-:- use_module(readLine,[readLine/1]).
-
 get_user_input:-
-    write('Type a command'),
+    write('Type a command:'), nl, nl,
     readln(Input),
-    process_input(Input).
+    process_input(Input),
+    get_user_input.
 
-process_input([_]) :-
-    write('You are too slow! The murderer still lurks in the shadows! They eliminate you in your hesitation').
+process_input([]) :-
+    write('You are too slow! The murderer still lurks in the shadows! They eliminate you in your hesitation...'), nl, nl,
+    halt(0).
 
 process_input([go, to, NewRoom]) :-
     current_room(Current),
     % connected(Current, NewRoom),
     change_room(NewRoom),
-    write('You have moved to '), write(NewRoom).
+    write('You have moved to '), write(NewRoom), nl, nl,
     print_location.
     
 
@@ -76,4 +89,5 @@ play :-
     write('IKB has since fallen into a state of misery and despair. You enter through its front doors. Its quiet.'), nl,
     assertz(current_room(entrance)),
     print_location.
+    get_user_input.
     
