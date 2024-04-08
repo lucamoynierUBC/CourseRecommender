@@ -56,7 +56,8 @@ print_location :-
 get_user_input:-
     write('Type a command:'), nl, nl,
     readln(Input),
-    process_input(Input),
+    command(X, Input),
+    process_input(X),
     get_user_input.
 
 process_input([]) :-
