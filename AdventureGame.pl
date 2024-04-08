@@ -7,7 +7,6 @@ room(ikes, 'Ikes Cafe', 'You are in Ikes Cafe. The smell of cinnamon buns fills 
 room(entrance, 'Entrance', 'You enter the IKB, its heavy metal doors are rusted, from the constant downpour and neglect').
 room(dodson, 'Dodson Room', 'You enter the Dodson Room. All the curtains are closed. Was someone hiding something?').
 
-
 % possible murder weapons
 weapon(butterknife, 'a butter knife, accessibly sharpened.').
 weapon(laptop, 'an old laptop with the resemblence of a brick, with a large dent in it').
@@ -40,9 +39,22 @@ contains(emerging_media_lab, laptop).
 contains(bazooka, dodson).
 contains(quiet_room, lanyard).
 
-suspects(president_bacon, 'President Bacon', 'Recently appointed UBC President.').
-suspects(ex_president_ono, 'Ex-President Ono', 'Former president of UBC.').
-suspects(trudeau, 'Justin Trudeau', 'Current prime minister of Canada, a UBC alum').
+suspect(president_bacon, 'President Bacon', 'Recently appointed UBC President.').
+suspect(ex_president_ono, 'Ex-President Ono', 'Former president of UBC.').
+suspect(lily, 'Lily Bryant', 'CPSC 312 TA.').
+suspect(evangeline, 'Evangeline Lilly', 'Actress and UBC alum.').
+
+interrogate :-
+    write('The suspects for the murder are waiting outside with your colleague. It is time to start the'), nl,
+    write('interrogation. The indiviudals who were at IKB at the time of the murder are the following:'), nl, nl,
+    write('     Santa Ono, former president of UBC, who said he was visiting campus for a trip down memory lane.'), nl, nl,
+    write('     Benoit Antoine Bacon, current president of UBC, who said he was walking around to meet with students'), nl, 
+    write('     and get feedback on increasing yearly tuition.'), nl, nl,
+    write('     Lily Bryant, TA for CPSC 312, who said she was grading the Prolog midterms.'), nl, nl,
+    write('     And finally, Evangeline Lilly, UBC alum and famous actress known for her performance in Lost.'), nl, 
+    write('     She was at UBC to film an Ant-Man and the Wasp movie and went into IKB to use the washroom.'), nl, nl,
+    get_suspect.
+    
 
 print_location :-
     current_room(Current),
@@ -58,6 +70,197 @@ get_user_input:-
     readln(Input),
     process_input(Input),
     get_user_input.
+
+get_suspect :-
+    write('You can interrogate a suspect: e.g. interrogate santa ono'), nl,
+    write('Or you can arrest a suspect: make arrest'), nl, 
+    write('Be careful, you cannot revert an arrest.'), nl, nl,
+    readln(Input),
+    question(Input),
+    get_suspect.
+
+detective_handbook :-
+    write('You have learned from your trusty detective guidebook that you must ask the following questions,'), nl, 
+    write('verbatim, for a successful interrogation.'), nl, nl,
+    write('     why were you at ikb on the day of the murder'), nl,
+    write('     did you know the suspect personally'), nl,
+    write('     what exactly were you doing when the murder took place'), nl,
+    write('     no more questions'), nl, nl,
+    write('What do you ask? Example: no more questions'), nl, nl.
+
+question([interrogate, santa, ono]) :-
+    nl, write('You are questioning Santa Ono.'), nl, nl,
+    detective_handbook,
+    readln(Input),
+    ask_suspect(Input, santa),
+    question([interrogate, santa, ono]).
+
+question([interrogate, benoit, antoine, bacon]) :-
+    nl, write('You are questioning Benoit-Antoine Bacon.'), nl, nl,
+    detective_handbook,
+    readln(Input),
+    ask_suspect(Input, bacon),
+    question([interrogate, benoit, antoine, bacon]).
+
+question([interrogate, lily, bryant]) :-
+    nl, write('You are questioning Lily Bryant.'), nl, nl,
+    detective_handbook,
+    readln(Input),
+    ask_suspect(Input, lily),
+    question([interrogate, lily, bryant]).
+
+question([interrogate, evangeline, lilly]) :-
+    nl, write('You are questioning Evangeline Lilly.'), nl, nl,
+    detective_handbook,
+    readln(Input),
+    ask_suspect(Input, evangeline),
+    question([interrogate, evangeline, lilly]).
+
+question([make, arrest]) :-
+    nl, write('Who is guilty of David Pooles murder?'), nl, nl,
+    write('Santa Ono'), nl,
+    write('Benoit-Antoine Bacon'), nl,
+    write('Lily Bryant'), nl,
+    write('Evangeline Lily'), nl, nl,
+    readln(Input),
+    arrest(Input).
+
+question([interrogate, _]) :-
+    nl, write('That is not a suspect. Please try again.'), nl, nl,
+    interrogate.
+
+question([_,_]) :-
+    nl, write('Invalid input. Please try again.'), nl, nl,
+    interrogate.
+
+% Santa Ono's Questioning
+ask_suspect([why, were, you, at, ikb, on, the, day, of, the, murder], santa) :-
+    write('Former UBC president responds:'), nl, nl,
+    write('"Michigan was boring this time of the year, and I wanted to visit Vancouver to see some relatives and enjoy the scenery."'), nl,
+    write('"I was also craving a cinnamon bun from Ikes Cafe, so I went into IKB."'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]).
+
+ask_suspect([did, you, know, the, suspect, personally], santa) :-
+    write('Former UBC president responds:'), nl, nl,
+    write('"I did not. However, I knew that Professor Poole is... was one of our most esteemed professors."'), nl,
+    write('"I was very sad to hear his passing."'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]).
+
+ask_suspect([what, exactly, were, you, doing, when, the, murder, took, place], santa) :-
+    write('Former UBC president responds:'), nl, nl,
+    write('"I was enjoying my cinnamon bun on the outdoor patio."'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]).
+
+ask_suspect([no, more, questions], santa) :-
+    write('Former UBC president responds:'), nl, nl,
+    write('"Good luck detective."'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]),
+    interrogate.
+
+
+% Bacon's questioning
+ask_suspect([why, were, you, at, ikb, on, the, day, of, the, murder], bacon) :-
+    write('The UBC president responds:'), nl, nl,
+    write('"I was chatting with students to get their feedback on the tuition increase.'), nl,
+    write('It is nice to be out of office and see what the campus life is like."'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]).
+
+ask_suspect([did, you, know, the, suspect, personally], bacon) :-
+    write('The UBC president responds:'), nl, nl,
+    write('"I had briefly met him at a Science Faculty meeting.'), nl,
+    write('We just chatted about how A.I. can be implemented in our current science courses."'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]).
+
+ask_suspect([what, exactly, were, you, doing, when, the, murder, took, place], bacon) :-
+    write('Former UBC president responds:'), nl, nl,
+    write('"I was on the second floor when I saw a history presentation going on in the'), nl,
+    write('Dodson Room. I decided to stay and listen to the last 5 minutes of the presentation."'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]).
+
+ask_suspect([no, more, questions], bacon) :-
+    write('The UBC president responds:'), nl, nl,
+    write('"Thank you for your time."'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]),
+    interrogate.
+
+% Lily's questioning
+ask_suspect([why, were, you, at, ikb, on, the, day, of, the, murder], lily) :-
+    write('Lily responds:'), nl, nl,
+    write('"I was at the Quiet Room to get some grading done. There is usually'), nl,
+    write('no one in that room, and I prefer to work alone."'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]).
+
+ask_suspect([did, you, know, the, suspect, personally], lily) :-
+    write('Lily responds:'), nl, nl,
+    write('"Of course! I TA his course, and we have weekly check-ins.'), nl,
+    write('He was on his way to meet me to talk about a change in the syllabus.'), nl,
+    write('Maybe if I was in another building he would not have been murdered..."'), nl, nl,
+    write('She sighed with regret.'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]).
+
+ask_suspect([what, exactly, were, you, doing, when, the, murder, took, place], lily) :-
+    write('Lily responds:'), nl, nl,
+    write('"I was in the quiet room grading the exams, when my laptop suddenly died.'), nl,
+    write('I was on my way downstairs to the Emerging Media Lab to borrow a laptop."'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]).
+
+ask_suspect([no, more, questions], lily) :-
+    write('Lily responds:'), nl, nl,
+    write('"I hope you can find whoever committed this awful crime."'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]),
+    interrogate.
+
+
+% Evangeline's questioning
+ask_suspect([why, were, you, at, ikb, on, the, day, of, the, murder], evangeline) :-
+    write('The famous actress responds:'), nl, nl,
+    write('"We are filming a movie on campus and the nearest washroom was in this building."'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]).
+
+ask_suspect([did, you, know, the, suspect, personally], evangeline) :-
+    write('The famous actress responds:'), nl, nl,
+    write('"No, why would I? It has been a long time since I was a student at UBC."'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]).
+
+ask_suspect([what, exactly, were, you, doing, when, the, murder, took, place], evangeline) :-
+    write('The famous actress responds:'), nl, nl,
+    write('"Like I said, I was using the washroom. I do not think you need the details."'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]).
+
+ask_suspect([no, more, questions], evangeline) :-
+    write('Lily responds:'), nl, nl,
+    write('"Why am I even a suspect? Anyways, good luck with the investigation."'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]),
+    interrogate.
+
+ask_suspect([_], _) :-
+    write('Please follow the detective guidebook.'), nl, nl,
+    interrogate.
+
+arrest([santa, ono]) :-
+    halt(0).
+arrest([benoit, antoine, bacon]) :-
+    halt(0).
+arrest([lily, bryant]) :-
+    halt(0).
+arrest([evangeline, lily]) :-
+    halt(0).
 
 process_input([]) :-
     write('You are too slow! The murderer still lurks in the shadows! They eliminate you in your hesitation...'), nl, nl,
@@ -90,7 +293,7 @@ list_places(_).
 
 :- dynamic current_room/1.
 play :-
-    write('A horrible murder has taken place at IKB. UBCs beloved professor David Poole has been slain. No one can solve the mystery and apprehend the murderer! You are our only hope'), nl,
+    write('A horrible murder has taken place at IKB. UBCs beloved professor David Poole has been slain. No one was able to solve the mystery and apprehend the murderer. You are our only hope'), nl,
     write('IKB has since fallen into a state of misery and despair. You enter through its front doors. Its quiet.'), nl,
     assertz(current_room(entrance)),
     print_location.
