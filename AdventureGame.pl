@@ -273,6 +273,9 @@ process_input([goto, NewRoom]) :-
     change_room(NewRoom),
     write('You have moved to '), write(NewRoom), nl, nl,
     print_location.
+
+process_input([leave, NewRoom]) :-
+    interrogate.
     
 
 change_room(NewRoom) :-
@@ -301,6 +304,7 @@ play :-
     get_user_input.
     
 % NLP
+% Places
 verb(place, goto, [X|Y]-[X|Y]):- room(X, _, _).
 verb(place, goto, [go, to|X]-X).
 verb(place, goto, [walk, to|X]-X).
@@ -308,6 +312,34 @@ verb(place, goto, [head, to|X]-X).
 verb(place, goto, [go, towards|X]-X).
 verb(place, goto, [walk, towards|X]-X).
 verb(place, goto, [head, towards|X]-X).
+verb(place, goto, [move, towards|X]-X).
+verb(place, goto, [move, to|X]-X).
+verb(place, goto, [proceed, to|X]-X).
+verb(place, goto, [proceed, towards|X]-X).
+verb(place, goto, [travel, to|X]-X).
+verb(place, goto, [travel, towards|X]-X).
+verb(place, goto, [stroll, to|X]-X).
+verb(place, goto, [stroll, towards|X]-X).
+
+% Exiting the building
+verb(place, leave, [leave|X]-X).
+verb(place, leave, [exit|X]-X).
+verb(place, leave, [depart|X]-X).
+verb(place, leave, [take, off, from|X]-X).
+verb(place, leave, [set, out, from|X]-X).
+verb(place, leave, [embark, from|X]-X).
+verb(place, leave, [withdraw, from|X]-X).
+verb(place, leave, [vacate|X]-X).
+verb(place, leave, [retreat, from|X]-X).
+verb(place, leave, [step, out, of|X]-X).
+verb(place, leave, [walk, out, of|X]-X).
+verb(place, leave, [bail, out, of|X]-X).
+verb(place, leave, [flee, from|X]-X).
+verb(place, leave, [escape, from|X]-X).
+verb(place, leave, [get, out, of|X]-X).
+verb(place, leave, [clear, out, of|X]-X).
+verb(place, leave, [move, out, of|X]-X).
+verb(place, leave, [pull, out, of|X]-X).
 
 noun(place, R, [R|X]-X) :- room(R, _, _).
 noun(place, 'quiet room', [quiet, room|X]-X).
