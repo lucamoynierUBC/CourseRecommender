@@ -266,7 +266,7 @@ process_input([]) :-
     write('You are too slow! The murderer still lurks in the shadows! They eliminate you in your hesitation...'), nl, nl,
     halt(0).
 
-process_input([go, to, NewRoom]) :-
+process_input([goto, NewRoom]) :-
     current_room(Current),
     % connected(Current, NewRoom),
     change_room(NewRoom),
@@ -299,4 +299,30 @@ play :-
     print_location.
     get_user_input.
     
-% 
+% NLP
+verb(place, goto, [X|Y]-[X|Y]):- room(X, _, _).
+verb(place, goto, [go, to|X]-X).
+verb(place, goto, [walk, to|X]-X).
+verb(place, goto, [head, to|X]-X).
+verb(place, goto, [go, towards|X]-X).
+verb(place, goto, [walk, towards|X]-X).
+verb(place, goto, [head, towards|X]-X).
+
+noun(place, R, [R|X]-X) :- room(R, _, _).
+noun(place, 'quiet room', [quiet, room|X]-X).
+noun(place, 'emerging media lab', [ermerging, media, lab|X]-X).
+
+det([the|X]- X).
+det([a|X]-X).
+det([an|X]-X).
+
+object(Type, N, S1-S3) :-
+    det(S1-S2),
+    noun(Type, N, S2-S3).
+  object(Type, N, S1-S2) :-
+    noun(Type, N, S1-S2).
+
+command([V,O], InList) :-
+    verb(Object_Type, V, InList-S1),
+    object(Object_Type, O, S1-[]).
+
