@@ -76,10 +76,15 @@ change_room(NewRoom) :-
     assertz(current_room(NewRoom)).
 
 % List the places that a room is connected to. 
+% list_places(Room):- 
+%     connected(Room, Places),
+%     write(Places).
 list_places(Room):- 
-    connected(Room, Places),
-    write(Places).
-    
+    connected(Room, Place),
+    room(Place, Name, _),
+    write('- '), write(Place), nl, fail.
+list_places(_).
+
 
 % current_room(Room):- room(Room,_,_).
 
@@ -91,3 +96,4 @@ play :-
     print_location.
     get_user_input.
     
+% 
