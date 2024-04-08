@@ -304,7 +304,8 @@ play :-
     get_user_input.
     
 % NLP
-% Places
+
+% "goto" verbs have a place and an object, identifying many ways to leave a place
 verb(place, goto, [X|Y]-[X|Y]):- room(X, _, _).
 verb(place, goto, [go, to|X]-X).
 verb(place, goto, [walk, to|X]-X).
@@ -321,7 +322,7 @@ verb(place, goto, [travel, towards|X]-X).
 verb(place, goto, [stroll, to|X]-X).
 verb(place, goto, [stroll, towards|X]-X).
 
-% Exiting the building
+% Same as above, but verbs for leaving a place. 
 verb(place, leave, [leave|X]-X).
 verb(place, leave, [exit|X]-X).
 verb(place, leave, [depart|X]-X).
@@ -341,9 +342,10 @@ verb(place, leave, [clear, out, of|X]-X).
 verb(place, leave, [move, out, of|X]-X).
 verb(place, leave, [pull, out, of|X]-X).
 
+% Nouns are all the rooms in our game, made exception for rooms that are longer than two letters.
 noun(place, R, [R|X]-X) :- room(R, _, _).
-noun(place, 'quiet room', [quiet, room|X]-X).
-noun(place, 'emerging media lab', [ermerging, media, lab|X]-X).
+noun(place,  quiet_room, [quiet, room|X]-X).
+noun(place, emerging_media_lab, [emerging, media, lab|X]-X).
 
 det([the|X]- X).
 det([a|X]-X).
