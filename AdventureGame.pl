@@ -297,8 +297,11 @@ list_places(_).
 
 :- dynamic current_room/1.
 play :-
-    write('A horrible murder has taken place at IKB. UBCs beloved professor David Poole has been slain. No one was able to solve the mystery and apprehend the murderer. You are our only hope'), nl,
+    write('A horrible murder has taken place at IKB. UBCs beloved professor David Poole has'), nl, 
+    write('been slain. No one was able to solve the mystery and apprehend the murderer. You are our only hope'), nl,
     write('IKB has since fallen into a state of misery and despair. You enter through its front doors. Its quiet.'), nl,
+    write('You are going to inspect IKB for any clues, and at any time you can leave to meet'), nl,
+    write('your colleague outside, who has detained the suspects for your questioning.'), nl, nl,
     assertz(current_room(entrance)),
     print_location.
     get_user_input.
