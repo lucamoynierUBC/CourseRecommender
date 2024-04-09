@@ -344,6 +344,7 @@ verb(place, leave, [pull, out, of|X]-X).
 
 % Nouns are all the rooms in our game, made exception for rooms that are longer than two letters.
 noun(place, R, [R|X]-X) :- room(R, _, _).
+noun(place, 'ikb', [ikb|X]-X).
 noun(place,  quiet_room, [quiet, room|X]-X).
 noun(place, emerging_media_lab, [emerging, media, lab|X]-X).
 
