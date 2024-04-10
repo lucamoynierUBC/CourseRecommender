@@ -1,19 +1,17 @@
 % rooms
+% a room has a variable name, a string name and a description.
 room(quiet_room, 'Quiet Room', 'You are in the quiet study section, chairs and tables are flipped, there is a trail of blood but it leads nowhere. This is where the murder took place.').
 room(emerging_media_lab, 'Emerging Media Lab', 'You are in the emerging media lab. You see see the coveted Apple Vision Pro smashed on the ground.').
 room(bathroom, 'Bathroom', 'You enter the bathroom, nothing is amiss. The custodial staff have been taking good care of this area. Nothing to look at.'). 
 room(hallway, 'Hallway', 'You enter the hallway... Where do you go?').
 room(ikes, 'Ikes Cafe', 'You are in Ikes Cafe. The smell of cinnamon buns fills the air. On the counter, you see some utensils. One knife sticks out more than the others. There is a lanyard on the floor.').
 room(entrance, 'Entrance', 'You enter the IKB, its heavy metal doors are rusted, from the constant downpour and neglect').
-room(dodson, 'Dodson Room', 'You enter the Dodson Room. There are some pamhplets on the table, as well as a bazooka on display.').
-
-% possible murder weapons
-weapon(knife, 'a butter knife, accessibly sharpened.').
-weapon(laptop, 'an old laptop with the resemblence of a brick, with a large dent in it').
-weapon(bazooka, 'an old WW2 bazooka, used against the Nazis. Left behind by a history presentation in Dodson Room.'). 
-weapon(lanyard, 'a blue UBC landyard... 1st years...'). 
+room(dodson, 'Dodson Room', 'You enter the Dodson Room. There are some pamphlets on the table, as well as a bazooka on display.').
 
 % inspecting the objects
+% inspect has a variable name, and a description. An inspectable variable is either a possible murder weapon or an
+% object that gives context clues
+
 % quiet room:
 inspect(chairs, 'The chairs and tables are flipped. Was there a physical altercation between the victim and the murderer?').
 inspect(tables, 'The chairs and tables are flipped. Was there a physical altercation between the victim and the murderer?').
@@ -24,7 +22,7 @@ inspect(laptop, 'An old, heavy laptop with the resemblence of a brick, with a la
 inspect(applevision, 'The broken Apple Vision Pro is on the floor. Some of the pieces are missing, so someone tried to clean up the mess.').
 
 % bathroom
-% there's nothing?
+% there's nothing.
 
 % Ike's
 inspect(knife, 'The knife is different than all the other knives on the counter. It looks clean.').
@@ -32,14 +30,14 @@ inspect(lanyard, 'You feel your first-year memories creeping up, but you brush a
 
 % Dodson
 inspect(bazooka, 'One of the largest weapons you have seen. It has no ammunition.').
-inspect(pamhplets, 'The pamphlets are contain the short biographies of the presenters of a History presentation.').
+inspect(pamphlets, 'The pamphlets are contain the short biographies of the presenters of a History presentation.').
 
 inspect(_, 'Invalid input.').
 
-
+% move rooms is true if the current/old room is connected to the new room
 move_rooms(Old, New) :- connected(Old, New).
 
-% cy
+% connected is true if two rooms are connected.
 connected(quiet_room, hallway).
 connected(hallway, quiet_room).
 connected(emerging_media_lab, hallway).
@@ -50,6 +48,8 @@ connected(ikes, hallway).
 connected(hallway, ikes).
 connected(entrance, hallway).
 connected(hallway, entrance).
+connected(hallway, dodson).
+connected(dodson, hallway).
 
 % room contains...
 contains(ikes, butterknife).
@@ -57,11 +57,13 @@ contains(emerging_media_lab, laptop).
 contains(bazooka, dodson).
 contains(quiet_room, lanyard).
 
+% a suspect has a variable name, a string name and a short description
 suspect(president_bacon, 'President Bacon', 'Recently appointed UBC President.').
 suspect(ex_president_ono, 'Ex-President Ono', 'Former president of UBC.').
 suspect(lily, 'Lily Bryant', 'CPSC 312 TA.').
 suspect(evangeline, 'Evangeline Lilly', 'Actress and UBC alum.').
 
+% interrogation is true when the suspect details are displayed.
 interrogate :-
     write('The suspects for the murder are waiting outside with your colleague. It is time to start the'), nl,
     write('interrogation. The indiviudals who were detained for questioning are the following:'), nl, nl,
@@ -73,16 +75,18 @@ interrogate :-
     write('     She was at UBC to film an Ant-Man and the Wasp movie and went into IKB to use the washroom.'), nl, nl,
     get_suspect.
     
-
+% print location displays the current room and any connected rooms, then gets user input
 print_location :-
     current_room(Current),
     room(Current, _, Desc),
     write(Desc),nl,nl,
     write('You can move to the following: '), nl, nl,
-    list_places(Current), nl, nl,
-    %write('Where would you like to move to?'), nl, nl.
+    list_places(Current), nl,
+    write('Or you can take a look at anything suspicious.'), nl, nl,
     get_user_input.
 
+% get user input obtains user command, then processes it.
+% we always want to ask for user input as it is necessary for game progress
 get_user_input:-
     nl, write('Type a command:'), nl, nl,
     readln(Input),
@@ -90,6 +94,8 @@ get_user_input:-
     process_input(X),
     get_user_input.
 
+% get suspect displays the options of interrogating a suspect or making an arrest
+% once player leaves ikb, they can only see these options
 get_suspect :-
     write('You can interrogate a suspect: e.g. interrogate santa ono'), nl,
     write('Or you can arrest a suspect: make arrest'), nl, 
@@ -98,6 +104,8 @@ get_suspect :-
     question(Input),
     get_suspect.
 
+% detective handbook that provides the exact questions the user has to input to the command line
+% the user should be able to copy and paste questions
 detective_handbook :-
     write('You have learned from your trusty detective guidebook that you must ask the following questions,'), nl, 
     write('verbatim, for a successful interrogation.'), nl, nl,
@@ -107,6 +115,7 @@ detective_handbook :-
     write('     no more questions'), nl, nl,
     write('What do you ask? Example: no more questions'), nl, nl.
 
+% question processes user command to interrogate or make arrest
 question([interrogate, santa, ono]) :-
     nl, write('You are questioning Santa Ono.'), nl, nl,
     detective_handbook,
@@ -115,7 +124,7 @@ question([interrogate, santa, ono]) :-
     question([interrogate, santa, ono]).
 
 question([interrogate, benoit, antoine, bacon]) :-
-    nl, write('You are questioning Benoit-Antoine Bacon.'), nl, nl,
+    nl, write('You are questioning Benoit Antoine Bacon.'), nl, nl,
     detective_handbook,
     readln(Input),
     ask_suspect(Input, bacon),
@@ -155,6 +164,8 @@ question([_,_]) :-
 question([_]) :-
     nl, write('Invalid input. Please try again.'), nl, nl,
     interrogate.
+
+% ask suspect is true if player asks valid question to suspect, then the answer is displayed.
 
 % Santa Ono's Questioning
 ask_suspect([why, were, you, at, ikb, on, the, day, of, the, murder], santa) :-
@@ -279,12 +290,14 @@ ask_suspect([_], _) :-
     write('Please follow the detective guidebook.'), nl, nl,
     interrogate.
 
+% arrest processes user input of making arrest.
+% it will halt the game if the input is a valid name
 arrest([santa, ono]) :-
     write('You arrested Santa Ono.'), nl,
-    write('GAME OVER: You have arrested the wrong suspect!'),
+    write('GAME OVER: You have arrested the wrong suspect!'), nl, nl,
     halt(0).
 arrest([benoit, antoine, bacon]) :-
-    write('You arrested Benoit-Antoine Bacon.'), nl,
+    write('You arrested Benoit Antoine Bacon.'), nl,
     write('You have identified the murderer!'), nl,
     write('You have used your unmatched detective skills to solve another mystery.'), nl, nl,
     write('Press return to continue.'), nl,
@@ -305,11 +318,11 @@ arrest([benoit, antoine, bacon]) :-
     halt(0).
 arrest([lily, bryant]) :-
     write('You arrested Lily Bryant.'), nl,
-    write('GAME OVER: You have arrested the wrong suspect!'),
+    write('GAME OVER: You have arrested the wrong suspect!'), nl, nl,
     halt(0).
 arrest([evangeline, lily]) :-
     write('You arrested Evangeline Lily.'), nl,
-    write('GAME OVER: You have arrested the wrong suspect!'),
+    write('GAME OVER: You have arrested the wrong suspect!'), nl, nl,
     halt(0).
 
 process_input([]) :-
@@ -346,13 +359,14 @@ list_places(Room):-
 list_places(_).
 
 
-% current_room(Room):- room(Room,_,_).
+
 
 :- dynamic current_room/1.
+% play starts the game by displaying a description
 play :-
     write('A horrible murder has taken place at IKB. UBCs beloved professor David Poole has'), nl, 
-    write('been slain. No one was able to solve the mystery and apprehend the murderer. You are our only hope'), nl,
-    write('IKB has since fallen into a state of misery and despair. You enter through its front doors. Its quiet.'), nl,
+    write('been slain. No one was able to solve the mystery and apprehend the murderer. You are our only hope!'), nl, nl,
+    write('IKB has since fallen into a state of misery and despair. You enter through its front doors. Its quiet.'), nl, nl,
     write('You are going to inspect IKB for any clues, and at any time you can leave to meet'), nl,
     write('your colleague outside, who has detained the suspects for your questioning.'), nl, nl,
     assertz(current_room(entrance)),
@@ -412,8 +426,10 @@ verb(inspectable, inspect, [go, over|X]-X).
 verb(inspectable, inspect, [inspect|X]-X).
 verb(inspectable, inspect, [explore|X]-X).
 verb(inspectable, inspect, [study|X]-X).
+verb(inspectable, inspect, [observe|X]-X).
 
-% Nouns are all the rooms and objects in our game, made exception for rooms that are longer than two letters.
+% Nouns are all the rooms and objects in our game, made exception for rooms that are longer than two letters
+% and objects with special names
 noun(place, R, [R|X]-X) :- room(R, _, _).
 noun(place, 'ikb', [ikb|X]-X).
 noun(place,  quiet_room, [quiet, room|X]-X).
@@ -421,6 +437,11 @@ noun(place, emerging_media_lab, [emerging, media, lab|X]-X).
 noun(inspectable, R, [R|X]-X) :- inspect(R,_).
 noun(inspectable, 'apple', [apple|X]-X) :- inspect(applevision, _).
 noun(inspectable, 'glasses', [glasses|X]-X) :- inspect(applevision, _).
+noun(inspectable, 'apple vision pro', [apple, vision, pro|X]-X) :- inspect(applevision, _).
+noun(inspectable, 'apple vision pros', [apple, vision, pros|X]-X) :- inspect(applevision, _).
+noun(inspectable, 'chairs and tables', [chairs, and, tables|X]-X) :- inspect(chairs,_).
+noun(inspectable, 'tables and chairs', [tables, and, chairs|X]-X) :- inspect(chairs,_).
+noun(inspectable, 'trail of blood', [trail, of, blood|X]-X) :- inspect(blood,_).
 
 det([the|X]- X).
 det([a|X]-X).
