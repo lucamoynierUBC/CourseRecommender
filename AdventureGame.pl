@@ -1,23 +1,41 @@
 % rooms
-room(quiet_room, 'Quiet Room', 'You are in the quiet study section, chairs and tables are flipped, there is a trail of blood but it leads nowhere').
+room(quiet_room, 'Quiet Room', 'You are in the quiet study section, chairs and tables are flipped, there is a trail of blood but it leads nowhere. This is where the murder took place.').
 room(emerging_media_lab, 'Emerging Media Lab', 'You are in the emerging media lab. You see see the coveted Apple Vision Pro smashed on the ground.').
-room(bathroom, 'Bathroom', 'You enter the bathroom, nothing is amiss. You realize you have to take a piss'). 
-room(hallway, 'Hallway', 'You enter the hallway... where do you go?').
-room(ikes, 'Ikes Cafe', 'You are in Ikes Cafe. The smell of cinnamon buns fills the air.').
+room(bathroom, 'Bathroom', 'You enter the bathroom, nothing is amiss. The custodial staff have been taking good care of this area. Nothing to look at.'). 
+room(hallway, 'Hallway', 'You enter the hallway... Where do you go?').
+room(ikes, 'Ikes Cafe', 'You are in Ikes Cafe. The smell of cinnamon buns fills the air. On the counter, you see some utensils. One knife sticks out more than the others. There is a lanyard on the floor.').
 room(entrance, 'Entrance', 'You enter the IKB, its heavy metal doors are rusted, from the constant downpour and neglect').
-room(dodson, 'Dodson Room', 'You enter the Dodson Room. All the curtains are closed. Was someone hiding something?').
+room(dodson, 'Dodson Room', 'You enter the Dodson Room. There are some pamhplets on the table, as well as a bazooka on display.').
 
 % possible murder weapons
-weapon(butterknife, 'a butter knife, accessibly sharpened.').
+weapon(knife, 'a butter knife, accessibly sharpened.').
 weapon(laptop, 'an old laptop with the resemblence of a brick, with a large dent in it').
 weapon(bazooka, 'an old WW2 bazooka, used against the Nazis. Left behind by a history presentation in Dodson Room.'). 
 weapon(lanyard, 'a blue UBC landyard... 1st years...'). 
 
-% inspecting the weapons
-inspect(butterknife, 'The knife has recently been cleaned. A few water droplets shine under the fluorescent lights.').
-inspect(laptop, 'The laptop is heavy. You try to turn it on but nothing happens.').
-inspect(bazooka, 'One of the largest weapons you have seen. It has no ammunition.').
+% inspecting the objects
+% quiet room:
+inspect(chairs, 'The chairs and tables are flipped. Was there a physical altercation between the victim and the murderer?').
+inspect(tables, 'The chairs and tables are flipped. Was there a physical altercation between the victim and the murderer?').
+inspect(blood, 'The blood on the floor is dry. The victim was hit or stabbed with something.').
+
+% emerging media lab
+inspect(laptop, 'An old, heavy laptop with the resemblence of a brick, with a large dent in it. You try to turn it on but nothing happens.').
+inspect(applevision, 'The broken Apple Vision Pro is on the floor. Some of the pieces are missing, so someone tried to clean up the mess.').
+
+% bathroom
+% there's nothing?
+
+% Ike's
+inspect(knife, 'The knife is different than all the other knives on the counter. It looks clean.').
 inspect(lanyard, 'You feel your first-year memories creeping up, but you brush away the thoughts. You realize that the lanyard is large enough to fit around someones neck.').
+
+% Dodson
+inspect(bazooka, 'One of the largest weapons you have seen. It has no ammunition.').
+inspect(pamhplets, 'The pamphlets are contain the short biographies of the presenters of a History presentation.').
+
+inspect(_, 'Invalid input.').
+
 
 move_rooms(Old, New) :- connected(Old, New).
 
@@ -46,7 +64,7 @@ suspect(evangeline, 'Evangeline Lilly', 'Actress and UBC alum.').
 
 interrogate :-
     write('The suspects for the murder are waiting outside with your colleague. It is time to start the'), nl,
-    write('interrogation. The indiviudals who were at IKB at the time of the murder are the following:'), nl, nl,
+    write('interrogation. The indiviudals who were detained for questioning are the following:'), nl, nl,
     write('     Santa Ono, former president of UBC, who said he was visiting campus for a trip down memory lane.'), nl, nl,
     write('     Benoit Antoine Bacon, current president of UBC, who said he was walking around to meet with students'), nl, 
     write('     and get feedback on increasing yearly tuition.'), nl, nl,
@@ -66,7 +84,7 @@ print_location :-
     get_user_input.
 
 get_user_input:-
-    write('Type a command:'), nl, nl,
+    nl, write('Type a command:'), nl, nl,
     readln(Input),
     command(X, Input),
     process_input(X),
@@ -134,6 +152,10 @@ question([_,_]) :-
     nl, write('Invalid input. Please try again.'), nl, nl,
     interrogate.
 
+question([_]) :-
+    nl, write('Invalid input. Please try again.'), nl, nl,
+    interrogate.
+
 % Santa Ono's Questioning
 ask_suspect([why, were, you, at, ikb, on, the, day, of, the, murder], santa) :-
     write('Former UBC president responds:'), nl, nl,
@@ -174,7 +196,8 @@ ask_suspect([why, were, you, at, ikb, on, the, day, of, the, murder], bacon) :-
 ask_suspect([did, you, know, the, suspect, personally], bacon) :-
     write('The UBC president responds:'), nl, nl,
     write('"I had briefly met him at a Science Faculty meeting.'), nl,
-    write('We just chatted about how A.I. can be implemented in our current science courses."'), nl, nl,
+    write('We just chatted about how A.I. can be implemented in our current science courses."'), nl,
+    write('Although I have to say, I am not really a big fan of A.I.'), nl,nl,
     write('Press return to continue.'), nl, nl,
     readln([]).
 
@@ -212,7 +235,9 @@ ask_suspect([did, you, know, the, suspect, personally], lily) :-
 ask_suspect([what, exactly, were, you, doing, when, the, murder, took, place], lily) :-
     write('Lily responds:'), nl, nl,
     write('"I was in the quiet room grading the exams, when my laptop suddenly died.'), nl,
-    write('I was on my way downstairs to the Emerging Media Lab to borrow a laptop."'), nl, nl,
+    write('I went downstairs to the Emerging Media Lab to borrow a laptop, but I"'), nl,
+    write('accidentally bumped into the table, and the Apple Vision Pros on the table'), nl,
+    write('fell off. I was trying to clean up the pieces.'), nl, nl,
     write('Press return to continue.'), nl, nl,
     readln([]).
 
@@ -244,7 +269,7 @@ ask_suspect([what, exactly, were, you, doing, when, the, murder, took, place], e
     readln([]).
 
 ask_suspect([no, more, questions], evangeline) :-
-    write('Lily responds:'), nl, nl,
+    write('The famous actress responds:'), nl, nl,
     write('"Why am I even a suspect? Anyways, good luck with the investigation."'), nl, nl,
     write('Press return to continue.'), nl, nl,
     readln([]),
@@ -255,17 +280,41 @@ ask_suspect([_], _) :-
     interrogate.
 
 arrest([santa, ono]) :-
+    write('You arrested Santa Ono.'), nl,
+    write('GAME OVER: You have arrested the wrong suspect!'),
     halt(0).
 arrest([benoit, antoine, bacon]) :-
+    write('You arrested Benoit-Antoine Bacon.'), nl,
+    write('You have identified the murderer!'), nl,
+    write('You have used your unmatched detective skills to solve another mystery.'), nl, nl,
+    write('Press return to continue.'), nl,
+    readln([]),
+    write('During trial, Bacon admits that he wanted to eliminate Professor Poole'), nl,
+    write('because he believes that A.I. is a threat to society, and he wants to stop'), nl,
+    write('the field from evolving.'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]),
+    write('As he was watching the presentation, he saw Professor Poole go into the empty quiet room'), nl,
+    write('where Lily had just left to go downstairs. He trapped him in the quiet room to eliminate him.'), nl, nl,
+    write('Press return to continue.'), nl, nl,
+    readln([]),
+    write('Professor Poole tried to fight off the murderer, but alas, the murderer drew his knife and'), nl,
+    write('ended the fight swiftly. He then cleaned the knife in the washroom and discreetly placed'), nl,
+    write('it on the kitchen counter at Ikes, successfully hiding the murder weapon.'), nl, nl,
+    write('UBC is grateful to you for solving this mystery!'), nl, nl,
     halt(0).
 arrest([lily, bryant]) :-
+    write('You arrested Lily Bryant.'), nl,
+    write('GAME OVER: You have arrested the wrong suspect!'),
     halt(0).
 arrest([evangeline, lily]) :-
+    write('You arrested Evangeline Lily.'), nl,
+    write('GAME OVER: You have arrested the wrong suspect!'),
     halt(0).
 
 process_input([]) :-
-    write('You are too slow! The murderer still lurks in the shadows! They eliminate you in your hesitation...'), nl, nl,
-    halt(0).
+    write('You have to act fast! Time is of the essence.'), nl, nl,
+    get_user_input.
 
 process_input([goto, NewRoom]) :-
     current_room(Current),
@@ -276,6 +325,10 @@ process_input([goto, NewRoom]) :-
 
 process_input([leave, NewRoom]) :-
     interrogate.
+
+process_input([inspect, Object]) :-
+    inspect(Object, Description),
+    write(Description).
     
 
 change_room(NewRoom) :-
@@ -297,8 +350,11 @@ list_places(_).
 
 :- dynamic current_room/1.
 play :-
-    write('A horrible murder has taken place at IKB. UBCs beloved professor David Poole has been slain. No one was able to solve the mystery and apprehend the murderer. You are our only hope'), nl,
+    write('A horrible murder has taken place at IKB. UBCs beloved professor David Poole has'), nl, 
+    write('been slain. No one was able to solve the mystery and apprehend the murderer. You are our only hope'), nl,
     write('IKB has since fallen into a state of misery and despair. You enter through its front doors. Its quiet.'), nl,
+    write('You are going to inspect IKB for any clues, and at any time you can leave to meet'), nl,
+    write('your colleague outside, who has detained the suspects for your questioning.'), nl, nl,
     assertz(current_room(entrance)),
     print_location.
     get_user_input.
@@ -342,11 +398,29 @@ verb(place, leave, [clear, out, of|X]-X).
 verb(place, leave, [move, out, of|X]-X).
 verb(place, leave, [pull, out, of|X]-X).
 
-% Nouns are all the rooms in our game, made exception for rooms that are longer than two letters.
+% Verbs for inspecting an object/weapon
+verb(inspectable, inspect, [inspect|X]-X).
+verb(inspectable, inspect, [examine|X]-X).
+verb(inspectable, inspect, [scan|X]-X).
+verb(inspectable, inspect, [look, at|X]-X).
+verb(inspectable, inspect, [analyze|X]-X).
+verb(inspectable, inspect, [views|X]-X).
+verb(inspectable, inspect, [check, out|X]-X).
+verb(inspectable, inspect, [investigate|X]-X).
+verb(inspectable, inspect, [audit|X]-X).
+verb(inspectable, inspect, [go, over|X]-X).
+verb(inspectable, inspect, [inspect|X]-X).
+verb(inspectable, inspect, [explore|X]-X).
+verb(inspectable, inspect, [study|X]-X).
+
+% Nouns are all the rooms and objects in our game, made exception for rooms that are longer than two letters.
 noun(place, R, [R|X]-X) :- room(R, _, _).
 noun(place, 'ikb', [ikb|X]-X).
 noun(place,  quiet_room, [quiet, room|X]-X).
 noun(place, emerging_media_lab, [emerging, media, lab|X]-X).
+noun(inspectable, R, [R|X]-X) :- inspect(R,_).
+noun(inspectable, 'apple', [apple|X]-X) :- inspect(applevision, _).
+noun(inspectable, 'glasses', [glasses|X]-X) :- inspect(applevision, _).
 
 det([the|X]- X).
 det([a|X]-X).
