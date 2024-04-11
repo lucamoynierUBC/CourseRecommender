@@ -50,12 +50,32 @@ connected(entrance, hallway).
 connected(hallway, entrance).
 connected(hallway, dodson).
 connected(dodson, hallway).
+connected(dodson, quiet_room).
+connected(quiet_room, dodson).
 
 % room contains...
-contains(ikes, butterknife).
+
+% emerging media lab
 contains(emerging_media_lab, laptop).
-contains(bazooka, dodson).
+contains(emerging_media_lab, applevision).  
+
+% quiet_room
 contains(quiet_room, lanyard).
+contains(quiet_room, blood).
+contains(quiet_room, chairs).
+contains(quiet_room, tables).
+
+% ikes
+contains(ikes, knife).
+contains(ikes, lanyard).
+
+% dodson
+contains(dodson, bazooka).
+contains(dodson, pamphlets).
+
+contains(_,_) :- 
+    write('This room does not contain this object.'),
+    get_user_input.
 
 % a suspect has a variable name, a string name and a short description
 suspect(president_bacon, 'President Bacon', 'Recently appointed UBC President.').
@@ -341,6 +361,8 @@ process_input([leave, NewRoom]) :-
 
 process_input([inspect, Object]) :-
     inspect(Object, Description),
+    current_room(Current),
+    contains(Current,Object),
     write(Description).
     
 
