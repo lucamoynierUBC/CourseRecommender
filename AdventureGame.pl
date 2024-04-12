@@ -395,9 +395,9 @@ play :-
     print_location.
     get_user_input.
     
-% NLP
+% NLP -some code adopted from https://www.amzi.com/AdventureInProlog/a1start.php
 
-% "goto" verbs have a place and an object, identifying many ways to leave a place
+% "goto" verbs have a place and an object, identifying the command to go to a place
 verb(place, goto, [X|Y]-[X|Y]):- room(X, _, _).
 verb(place, goto, [go, to|X]-X).
 verb(place, goto, [walk, to|X]-X).
@@ -465,16 +465,19 @@ noun(inspectable, 'chairs and tables', [chairs, and, tables|X]-X) :- inspect(cha
 noun(inspectable, 'tables and chairs', [tables, and, chairs|X]-X) :- inspect(chairs,_).
 noun(inspectable, 'trail of blood', [trail, of, blood|X]-X) :- inspect(blood,_).
 
+% difference list for determiners
 det([the|X]- X).
 det([a|X]-X).
 det([an|X]-X).
 
+% object may be preceded by a deteminer
 object(Type, N, S1-S3) :-
     det(S1-S2),
     noun(Type, N, S2-S3).
   object(Type, N, S1-S2) :-
     noun(Type, N, S1-S2).
 
+% commands coposed of verbs and objects
 command([V,O], InList) :-
     verb(Object_Type, V, InList-S1),
     object(Object_Type, O, S1-[]).
